@@ -43,7 +43,7 @@ class App extends Component {
 		})
 		return (
 			<div className="App container">
-				<Nav />
+				<Nav content="NAV" />
 				{this.state.isShowing ? title : null}
 				<ul>{composedPosts}</ul>
 				<button onClick={this.handleClick}>click me</button>

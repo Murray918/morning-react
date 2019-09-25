@@ -1,9 +1,9 @@
 import React from 'react'
 
 
-const Nav = () => {
+const Nav = ({content}) => {
     return (
-        <h3>I am a nav bar!</h3>
+        <h3>{content}</h3>
     )
 }
 
