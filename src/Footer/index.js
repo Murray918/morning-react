@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 class Footer extends Component {
 	render() {
-		return <h5 className="footer">i am a footer</h5>
+		return <footer className="footer u-pull-right">i am a footer</footer>
 	}
 }
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import './App.css'
 import Nav from './Nav'
 import Footer from './Footer'
+import BlogForm from './BlogForm'
 
 class App extends Component {
 	//this is our state object
@@ -21,7 +22,7 @@ class App extends Component {
 		]
 	}
 	// we will define all event logic here
-	handleClick = event => {
+	handleShowForm = event => {
 		this.setState({
 			isShowing: !this.state.isShowing
 		})
@@ -44,9 +45,12 @@ class App extends Component {
 		return (
 			<div className="App container">
 				<Nav content="NAV" />
-				{this.state.isShowing ? title : null}
+				{!this.state.isShowing ? (
+					<BlogForm handleToggle={this.handleShowForm} />
+				) : (
+					<button onClick={this.handleShowForm}>Add Post</button>
+				)}
 				<ul>{composedPosts}</ul>
-				<button onClick={this.handleClick}>click me</button>
 				<Footer />
 			</div>
 		)
