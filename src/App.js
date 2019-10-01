@@ -3,6 +3,7 @@ import './App.css'
 import Nav from './Nav'
 import Footer from './Footer'
 import BlogForm from './BlogForm'
+import Post from './Post'
 
 class App extends Component {
 	//this is our state object
@@ -29,10 +30,21 @@ class App extends Component {
 	}
 
 	//update state here and pass this method down to another component
-	handleAddPost = ({ title, user, content}) => {
-		console.log('app.js line 33', post)
+	handleAddPost = ({ title, user, content }) => {
+		console.log('app.js line 33', { title, user, content })
 		this.setState({
-			posts: [{title, user, content }, ...this.state.posts] // we spread the object and the state
+			posts: [{ title, user, content }, ...this.state.posts] // we spread the object and the state
+		})
+	}
+
+	handleDelete = id => {
+		// first we copy the state and modify it
+		let newState = this.state.posts.filter(
+			item => this.state.posts[id] !== item
+		)
+		// set the state
+		this.setState({
+			posts: newState
 		})
 	}
 
@@ -43,11 +55,14 @@ class App extends Component {
 		const title = <h1>Confetti Blog</h1>
 		const composedPosts = this.state.posts.map((item, index) => {
 			return (
-				<li key={index} className="post">
-					<h3 className="postTitles">{item.title}</h3>
-					<p>{item.content}</p>
-					<h6>{item.user}</h6>
-				</li>
+				<Post
+					key={index}
+					title={item.title}
+					user={item.user}
+					content={item.content}
+					handleDelete={this.handleDelete}
+					id={index}
+				/>
 			)
 		})
 		return (
