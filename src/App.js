@@ -9,19 +9,19 @@ class App extends Component {
 	//this is our state object
 	state = {
 		isShowing: true,
-		posts: [
-			{
-				title: 'My first confetti blog post',
-				content: 'I love confetti!!! I PUT IT EVERYWHERE!!!!',
-				user: 'Murray918'
-			},
-			{
-				title: 'Pandas are fun!',
-				content: 'I dress like one every day!',
-				user: 'cwill833'
-			}
-		]
+		posts: []
 	}
+
+	componentDidMount = () =>{
+		getAll().then(results =>{
+			console.log('partying on line 17:::', results) // this comes back as an arry of objects 
+			this.setState({
+				posts: results // we do not need to spread it becuase we are just updating the posts to hold the arry of obj
+			})
+		})
+	}
+
+
 	// we will define all event logic here
 	handleShowForm = event => {
 		this.setState({
@@ -30,10 +30,21 @@ class App extends Component {
 	}
 
 	//update state here and pass this method down to another component
-	handleAddPost = ({ title, user, content }) => {
-		console.log('app.js line 33', { title, user, content })
-		this.setState({
-			posts: [{ title, user, content }, ...this.state.posts] // we spread the object and the state
+	handleAddPost = ({ title, author, post }) => {
+		const url = 'http://localhost:8000/api/post'
+		const options = {
+			method: 'POST',
+			headers: {
+				"content-type" : "application/json"
+			},
+			body: JSON.stringify({title, author, post})
+		}
+
+		handleVerbs(url, options).then(results=>{
+			console.log(results) // this returns a single object
+			this.setState({
+				posts: [...this.state.posts, results] // we do not need to spread it because we are just adding the single object to the end of the array. We have to spread out the state.posts is because its in an arry and we have to extract each obj out of it
+			})
 		})
 	}
 
@@ -58,8 +69,8 @@ class App extends Component {
 				<Post
 					key={index}
 					title={item.title}
-					user={item.user}
-					content={item.content}
+					user={item.author}
+					content={item.post}
 					handleDelete={this.handleDelete}
 					id={index}
 				/>
@@ -67,7 +78,7 @@ class App extends Component {
 		})
 		return (
 			<div className="App container">
-				<Nav content="NAV" />
+				<Nav content={title} />
 				{!this.state.isShowing ? (
 					<BlogForm
 						handleAddPost={this.handleAddPost}
@@ -84,3 +95,17 @@ class App extends Component {
 }
 
 export default App
+
+
+async function getAll(){
+	const url = 'http://localhost:8000/api/posts'
+	const initalFetch = await fetch(url)
+	const fetchJSON = await initalFetch.json()
+	return await fetchJSON
+}
+
+async function handleVerbs(url, options){
+	const initalFetch = await fetch(url, options)
+	const fetchJSON = await initalFetch.json()
+	return await fetchJSON
+}
